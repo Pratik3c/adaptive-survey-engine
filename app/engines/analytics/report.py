@@ -1,7 +1,7 @@
 from collections import Counter, defaultdict
 
 
-def build_session_report(session_id, survey, answers):
+def build_session_report(session_id, survey, answers, dimension_coverage=None):
     questions = {q.question_id: q for q in survey.questions}
     grouped = defaultdict(list)
 
@@ -47,4 +47,5 @@ def build_session_report(session_id, survey, answers):
         }),
         "answer_count": len(answers),
         "question_results": question_results,
+        "dimension_coverage": dimension_coverage or [],
     }

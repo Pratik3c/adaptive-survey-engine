@@ -1,0 +1,454 @@
+{
+  "survey_id": "VE_MARKET_001",
+  "title": "Velvet Ember Market Research Survey",
+  "version": "1.0",
+  "product_concept": "A portable cup of instant hot chocolate with a self-heating mechanism that heats the drink without an external heater.",
+  "research_objective": "Evaluate product appeal, purchase intent, pricing, taste preferences, safety concerns, usage occasions, and launch channels.",
+  "target_audience": {
+    "country": "India",
+    "age_min": 18,
+    "age_max": 26,
+    "segments": ["College students", "Young professionals"]
+  },
+  "adaptive_config": {
+    "min_questions": 8,
+    "max_questions": 15,
+    "selection_strategy": "weighted_adaptive",
+    "exclude_answered_questions": true,
+    "require_mandatory_questions": true,
+    "allow_none_of_the_above": true,
+    "stop_when_targets_met": true
+  },
+  "dimensions": [
+    {
+      "dimension_id": "D01",
+      "name": "Respondent Profile",
+      "importance_score": 0.5,
+      "target_coverage": 1.0,
+      "required_constructs": ["age_eligibility", "respondent_segment"]
+    },
+    {
+      "dimension_id": "D02",
+      "name": "Current Consumption",
+      "importance_score": 0.7,
+      "target_coverage": 0.8,
+      "required_constructs": ["consumption_frequency", "current_alternatives"]
+    },
+    {
+      "dimension_id": "D03",
+      "name": "Product Appeal",
+      "importance_score": 0.9,
+      "target_coverage": 0.9,
+      "required_constructs": ["concept_appeal", "perceived_usefulness", "purchase_intent"]
+    },
+    {
+      "dimension_id": "D04",
+      "name": "Taste Preferences",
+      "importance_score": 0.7,
+      "target_coverage": 0.8,
+      "required_constructs": ["chocolate_intensity", "sweetness", "flavour"]
+    },
+    {
+      "dimension_id": "D05",
+      "name": "Convenience",
+      "importance_score": 0.8,
+      "target_coverage": 0.8,
+      "required_constructs": ["heating_time", "usage_occasion", "portability"]
+    },
+    {
+      "dimension_id": "D06",
+      "name": "Price Sensitivity",
+      "importance_score": 0.9,
+      "target_coverage": 0.9,
+      "required_constructs": ["acceptable_price", "price_choice_tradeoff"]
+    },
+    {
+      "dimension_id": "D07",
+      "name": "Safety and Trust",
+      "importance_score": 0.95,
+      "target_coverage": 1.0,
+      "required_constructs": ["burn_risk", "contamination_concern", "temperature_control"]
+    },
+    {
+      "dimension_id": "D08",
+      "name": "Packaging and Marketing",
+      "importance_score": 0.5,
+      "target_coverage": 0.6,
+      "required_constructs": ["packaging_preference", "purchase_channel", "promotion"]
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q001",
+      "type": "single_choice",
+      "text": "What is your age range?",
+      "options": [
+        {"option_id": "A1", "label": "Below 18"},
+        {"option_id": "A2", "label": "18-21"},
+        {"option_id": "A3", "label": "22-26"},
+        {"option_id": "A4", "label": "Above 26"}
+      ],
+      "dimension_ids": ["D01"],
+      "mandatory": true,
+      "next_potential_question_ids": ["Q002"],
+      "branching_rules": [
+        {"when_option_id": "A1", "action": "terminate_ineligible"},
+        {"when_option_id": "A2", "next_question_ids": ["Q002"]},
+        {"when_option_id": "A3", "next_question_ids": ["Q002"]},
+        {"when_option_id": "A4", "action": "terminate_ineligible"}
+      ]
+    },
+    {
+      "question_id": "Q002",
+      "type": "single_choice",
+      "text": "Which best describes your current status?",
+      "options": [
+        {"option_id": "A1", "label": "College student"},
+        {"option_id": "A2", "label": "Working professional"},
+        {"option_id": "A3", "label": "Both studying and working"},
+        {"option_id": "A4", "label": "Other"}
+      ],
+      "dimension_ids": ["D01"],
+      "mandatory": true,
+      "next_potential_question_ids": ["Q003", "Q004"]
+    },
+    {
+      "question_id": "Q003",
+      "type": "single_choice",
+      "text": "How often do you consume hot chocolate?",
+      "options": [
+        {"option_id": "A1", "label": "Never"},
+        {"option_id": "A2", "label": "Less than once a month"},
+        {"option_id": "A3", "label": "1-3 times a month"},
+        {"option_id": "A4", "label": "Once a week or more"}
+      ],
+      "dimension_ids": ["D02"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q004", "Q005", "Q006"]
+    },
+    {
+      "question_id": "Q004",
+      "type": "multiple_choice",
+      "text": "Which drinks do you currently consume? Select all that apply.",
+      "options": [
+        {"option_id": "A1", "label": "Hot chocolate"},
+        {"option_id": "A2", "label": "Tea"},
+        {"option_id": "A3", "label": "Coffee"},
+        {"option_id": "A4", "label": "Milk-based drinks"},
+        {"option_id": "A5", "label": "Other drinks"}
+      ],
+      "dimension_ids": ["D02"],
+      "mandatory": true,
+      "next_potential_question_ids": ["Q005", "Q006"]
+    },
+    {
+      "question_id": "Q005",
+      "type": "single_choice",
+      "text": "Where do you most often consume hot chocolate or similar drinks?",
+      "options": [
+        {"option_id": "A1", "label": "At home"},
+        {"option_id": "A2", "label": "College or office"},
+        {"option_id": "A3", "label": "Cafe or restaurant"},
+        {"option_id": "A4", "label": "While travelling"},
+        {"option_id": "A5", "label": "I do not consume these drinks"}
+      ],
+      "dimension_ids": ["D02", "D05"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q006", "Q007", "Q008"]
+    },
+    {
+      "question_id": "Q006",
+      "type": "likert",
+      "text": "How inconvenient is it for you to obtain a hot drink when you are away from home?",
+      "scale": {"min": 1, "max": 5, "labels": ["Not at all inconvenient", "Extremely inconvenient"]},
+      "dimension_ids": ["D05"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q007", "Q008", "Q009"]
+    },
+    {
+      "question_id": "Q007",
+      "type": "single_choice",
+      "text": "How appealing is the Velvet Ember self-heating hot chocolate concept?",
+      "options": [
+        {"option_id": "A1", "label": "Not at all appealing"},
+        {"option_id": "A2", "label": "Slightly appealing"},
+        {"option_id": "A3", "label": "Moderately appealing"},
+        {"option_id": "A4", "label": "Very appealing"},
+        {"option_id": "A5", "label": "Extremely appealing"}
+      ],
+      "dimension_ids": ["D03"],
+      "mandatory": true,
+      "next_potential_question_ids": ["Q008", "Q009", "Q010", "Q011"]
+    },
+    {
+      "question_id": "Q008",
+      "type": "multiple_choice",
+      "text": "What would make this product useful to you?",
+      "options": [
+        {"option_id": "A1", "label": "No external heater needed"},
+        {"option_id": "A2", "label": "Convenient during travel"},
+        {"option_id": "A3", "label": "Quick preparation"},
+        {"option_id": "A4", "label": "Novel experience"},
+        {"option_id": "A5", "label": "Nothing particularly useful"},
+        {"option_id": "A6", "label": "Not sure"}
+      ],
+      "dimension_ids": ["D03", "D05"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q009", "Q010", "Q011"]
+    },
+    {
+      "question_id": "Q009",
+      "type": "single_choice",
+      "text": "Which heating time would you prefer?",
+      "options": [
+        {"option_id": "A1", "label": "1 minute"},
+        {"option_id": "A2", "label": "3 minutes"},
+        {"option_id": "A3", "label": "5 minutes"},
+        {"option_id": "A4", "label": "Heating time does not matter much"}
+      ],
+      "dimension_ids": ["D05"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q010", "Q011", "Q012"]
+    },
+    {
+      "question_id": "Q010",
+      "type": "single_choice",
+      "text": "Which chocolate intensity would you prefer?",
+      "options": [
+        {"option_id": "A1", "label": "Mild chocolate"},
+        {"option_id": "A2", "label": "Balanced chocolate"},
+        {"option_id": "A3", "label": "Rich dark chocolate"},
+        {"option_id": "A4", "label": "No preference"}
+      ],
+      "dimension_ids": ["D04"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q011", "Q012", "Q013"]
+    },
+    {
+      "question_id": "Q011",
+      "type": "single_choice",
+      "text": "Which sweetness level would you prefer?",
+      "options": [
+        {"option_id": "A1", "label": "Low sweetness"},
+        {"option_id": "A2", "label": "Medium sweetness"},
+        {"option_id": "A3", "label": "High sweetness"},
+        {"option_id": "A4", "label": "Sugar-free"},
+        {"option_id": "A5", "label": "No preference"}
+      ],
+      "dimension_ids": ["D04"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q012", "Q013", "Q014"]
+    },
+    {
+      "question_id": "Q012",
+      "type": "multiple_choice",
+      "text": "Which additional flavours would you consider trying?",
+      "options": [
+        {"option_id": "A1", "label": "Hazelnut"},
+        {"option_id": "A2", "label": "Caramel"},
+        {"option_id": "A3", "label": "Mocha"},
+        {"option_id": "A4", "label": "Classic chocolate only"},
+        {"option_id": "A5", "label": "Other"},
+        {"option_id": "A6", "label": "None"}
+      ],
+      "dimension_ids": ["D04"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q013", "Q014", "Q015"]
+    },
+    {
+      "question_id": "Q013",
+      "type": "single_choice",
+      "text": "What serving size would you prefer?",
+      "options": [
+        {"option_id": "A1", "label": "120 ml"},
+        {"option_id": "A2", "label": "180 ml"},
+        {"option_id": "A3", "label": "250 ml"},
+        {"option_id": "A4", "label": "No preference"}
+      ],
+      "dimension_ids": ["D08"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q014", "Q015", "Q016"]
+    },
+    {
+      "question_id": "Q014",
+      "type": "multiple_choice",
+      "text": "What concerns might prevent you from trying a self-heating drink?",
+      "options": [
+        {"option_id": "A1", "label": "Burns or overheating"},
+        {"option_id": "A2", "label": "Heating mechanism contaminating the drink"},
+        {"option_id": "A3", "label": "Unreliable heating"},
+        {"option_id": "A4", "label": "Environmental waste"},
+        {"option_id": "A5", "label": "Price"},
+        {"option_id": "A6", "label": "No concerns"},
+        {"option_id": "A7", "label": "Not sure"}
+      ],
+      "dimension_ids": ["D07"],
+      "mandatory": true,
+      "next_potential_question_ids": ["Q015", "Q016", "Q017"]
+    },
+    {
+      "question_id": "Q015",
+      "type": "likert",
+      "text": "How important would independently verified safety information be before purchasing?",
+      "scale": {"min": 1, "max": 5, "labels": ["Not important", "Extremely important"]},
+      "dimension_ids": ["D07"],
+      "mandatory": true,
+      "next_potential_question_ids": ["Q016", "Q017", "Q018"]
+    },
+    {
+      "question_id": "Q016",
+      "type": "single_choice",
+      "text": "Which price would you consider acceptable for one self-heating cup?",
+      "options": [
+        {"option_id": "A1", "label": "Below ₹30"},
+        {"option_id": "A2", "label": "₹30-49"},
+        {"option_id": "A3", "label": "₹50-69"},
+        {"option_id": "A4", "label": "₹70-99"},
+        {"option_id": "A5", "label": "₹100 or more"},
+        {"option_id": "A6", "label": "Would not buy at any price"}
+      ],
+      "dimension_ids": ["D06"],
+      "mandatory": true,
+      "next_potential_question_ids": ["Q017", "Q018", "Q019"]
+    },
+    {
+      "question_id": "Q017",
+      "type": "price_input",
+      "text": "What is the maximum price you would personally pay for one cup?",
+      "validation": {"min": 0, "max": 500, "currency": "INR"},
+      "dimension_ids": ["D06"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q018", "Q019", "Q020"]
+    },
+    {
+      "question_id": "Q018",
+      "type": "single_choice",
+      "text": "Which product would you choose?",
+      "experiment_id": "CBC01",
+      "design_note": "Illustrative task only. Production conjoint tasks should be generated using a balanced experimental design.",
+      "options": [
+        {
+          "option_id": "A1",
+          "label": "Product A: ₹49, classic chocolate, 3-minute heating, 180 ml",
+          "profile": {"price": 49, "taste": "classic", "heating_minutes": 3, "size_ml": 180}
+        },
+        {
+          "option_id": "A2",
+          "label": "Product B: ₹69, rich dark chocolate, 1-minute heating, 180 ml",
+          "profile": {"price": 69, "taste": "dark", "heating_minutes": 1, "size_ml": 180}
+        },
+        {
+          "option_id": "A3",
+          "label": "Product C: ₹39, classic chocolate, 5-minute heating, 250 ml",
+          "profile": {"price": 39, "taste": "classic", "heating_minutes": 5, "size_ml": 250}
+        },
+        {"option_id": "A4", "label": "None of these"}
+      ],
+      "dimension_ids": ["D03", "D04", "D05", "D06"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q019", "Q020", "Q021"]
+    },
+    {
+      "question_id": "Q019",
+      "type": "single_choice",
+      "text": "How likely are you to purchase Velvet Ember if it meets your taste and safety expectations?",
+      "options": [
+        {"option_id": "A1", "label": "Definitely would not buy"},
+        {"option_id": "A2", "label": "Probably would not buy"},
+        {"option_id": "A3", "label": "Might or might not buy"},
+        {"option_id": "A4", "label": "Probably would buy"},
+        {"option_id": "A5", "label": "Definitely would buy"}
+      ],
+      "dimension_ids": ["D03"],
+      "mandatory": true,
+      "next_potential_question_ids": ["Q020", "Q021", "Q022"]
+    },
+    {
+      "question_id": "Q020",
+      "type": "multiple_choice",
+      "text": "Where would you prefer to purchase Velvet Ember?",
+      "options": [
+        {"option_id": "A1", "label": "Quick-commerce app"},
+        {"option_id": "A2", "label": "Supermarket"},
+        {"option_id": "A3", "label": "College or office vending point"},
+        {"option_id": "A4", "label": "Cafe"},
+        {"option_id": "A5", "label": "Brand website"},
+        {"option_id": "A6", "label": "Other"}
+      ],
+      "dimension_ids": ["D08"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q021", "Q022", "Q023"]
+    },
+    {
+      "question_id": "Q021",
+      "type": "single_choice",
+      "text": "Which packaging style would you prefer?",
+      "options": [
+        {"option_id": "A1", "label": "Simple budget-friendly cup"},
+        {"option_id": "A2", "label": "Premium insulated cup"},
+        {"option_id": "A3", "label": "Lightweight travel cup"},
+        {"option_id": "A4", "label": "Packaging made with recyclable materials"},
+        {"option_id": "A5", "label": "No preference"}
+      ],
+      "dimension_ids": ["D08"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q022", "Q023", "Q024"]
+    },
+    {
+      "question_id": "Q022",
+      "type": "multiple_choice",
+      "text": "Which message would most encourage you to try the product?",
+      "options": [
+        {"option_id": "A1", "label": "Hot chocolate anywhere"},
+        {"option_id": "A2", "label": "Ready without an external heater"},
+        {"option_id": "A3", "label": "Rich chocolate experience"},
+        {"option_id": "A4", "label": "Verified safety and quality"},
+        {"option_id": "A5", "label": "Affordable everyday indulgence"}
+      ],
+      "dimension_ids": ["D08", "D03"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q023", "Q024", "Q025"]
+    },
+    {
+      "question_id": "Q023",
+      "type": "single_choice",
+      "text": "What would be your biggest reason not to purchase this product?",
+      "options": [
+        {"option_id": "A1", "label": "Too expensive"},
+        {"option_id": "A2", "label": "Safety concerns"},
+        {"option_id": "A3", "label": "Prefer freshly prepared drinks"},
+        {"option_id": "A4", "label": "Do not need the convenience"},
+        {"option_id": "A5", "label": "Taste or ingredients"},
+        {"option_id": "A6", "label": "No major barrier"}
+      ],
+      "dimension_ids": ["D03", "D06", "D07"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q024", "Q025"]
+    },
+    {
+      "question_id": "Q024",
+      "type": "short_text",
+      "text": "What one improvement would make Velvet Ember more attractive to you?",
+      "validation": {"max_length": 500},
+      "dimension_ids": ["D03", "D04", "D05", "D06", "D07", "D08"],
+      "mandatory": false,
+      "next_potential_question_ids": ["Q025"]
+    },
+    {
+      "question_id": "Q025",
+      "type": "single_choice",
+      "text": "Would you recommend trying Velvet Ember to a friend if it met your expectations?",
+      "options": [
+        {"option_id": "A1", "label": "Definitely not"},
+        {"option_id": "A2", "label": "Probably not"},
+        {"option_id": "A3", "label": "Not sure"},
+        {"option_id": "A4", "label": "Probably yes"},
+        {"option_id": "A5", "label": "Definitely yes"}
+      ],
+      "dimension_ids": ["D03"],
+      "mandatory": false,
+      "next_potential_question_ids": [],
+      "is_terminal_candidate": true
+    }
+  ]
+}

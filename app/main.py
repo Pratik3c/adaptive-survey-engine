@@ -41,6 +41,8 @@ from app.schemas.question import SurveyBlueprint
 from app.db.models import ResearchProject, ResearchDimension, SurveyRun, SurveyAnswer
 from app.engines.analytics.project_report import build_project_report
 from app.engines.analytics.project_insights import generate_project_insights
+from app.db.models import SessionDimensionCoverage
+from app.engines.analytics.coverage import update_session_coverage
 
 
 Base.metadata.create_all(bind=engine)
@@ -848,25 +850,50 @@ def submit_response(
         run.status = "ineligible"
 
     run.current_question_id = None
-    db.add(answer)
 
-    try:
-        db.commit()
-    except Exception:
-        db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail="Failed to save response.",
-        )
+    # v1
+    # db.add(answer)
+
+    # try:
+    #     db.commit()
+    # except Exception:
+    #     db.rollback()
+    #     raise HTTPException(
+    #         status_code=500,
+    #         detail="Failed to save response.",
+    #     )
+
+    # return {
+    #     "status": (
+    #         "ineligible"
+    #         if ineligible
+    #         else "answer_saved"
+    #     ),
+    #     "session_id": session_id,
+    #     "question_id": payload.question_id,
+    # }
+
+    # v2
+    db.add(answer)
+    db.flush()
+
+    coverage_result = update_session_coverage(
+        db=db,
+        session_id=session_id,
+        survey=survey,
+    )
+
+    db.commit()
 
     return {
         "status": (
             "ineligible"
-            if ineligible
+            if run.status == "ineligible"
             else "answer_saved"
         ),
         "session_id": session_id,
         "question_id": payload.question_id,
+        **coverage_result,
     }
 
 @app.get("/api/v1/sessions/{session_id}/analytics")
@@ -1019,7 +1046,32 @@ def get_session_report(
 
     survey = SurveyBlueprint.model_validate(run.survey_json)
 
-    return build_session_report(session_id, survey, answers)
+    coverage_records = (
+        db.query(SessionDimensionCoverage)
+        .filter(SessionDimensionCoverage.session_id == session_id)
+        .all()
+    )
+
+    dimension_coverage = []
+
+    for record in coverage_records:
+        dimension = db.query(ResearchDimension).filter(
+            ResearchDimension.id == record.dimension_id
+        ).first()
+
+        if dimension is None:
+            continue
+
+        dimension_coverage.append({
+            "dimension_id": dimension.id,
+            "dimension": dimension.name,
+            "importance": dimension.importance,
+            "achieved_coverage": record.achieved_coverage,
+            "target_coverage": record.target_coverage,
+            "target_attainment": record.target_attainment,
+        })
+
+    return build_session_report(session_id, survey, answers, dimension_coverage)
 
 
 @app.get("/api/v1/sessions/{session_id}/export.csv")
@@ -1101,7 +1153,43 @@ def get_session_insights(
     ).all()
 
     survey = SurveyBlueprint.model_validate(run.survey_json)
-    report = build_session_report(session_id, survey, answers)
+
+    coverage_records = (
+        db.query(SessionDimensionCoverage)
+        .filter(SessionDimensionCoverage.session_id == session_id)
+        .all()
+    )
+
+    dimension_coverage = []
+
+    for record in coverage_records:
+        dimension = db.get(ResearchDimension, record.dimension_id)
+
+        if dimension is None:
+            continue
+
+        dimension_coverage.append({
+            "dimension_id": dimension.id,
+            "dimension": dimension.name,
+            "importance": dimension.importance,
+            "achieved_coverage": record.achieved_coverage,
+            "target_coverage": record.target_coverage,
+            "target_attainment": record.target_attainment,
+            "target_gap": round(
+                max(
+                    record.target_coverage - record.achieved_coverage,
+                    0.0,
+                ),
+                4,
+            ),
+        })
+
+    report = build_session_report(
+        session_id,
+        survey,
+        answers,
+        dimension_coverage,
+    )
 
     if not answers:
         raise HTTPException(
@@ -1145,11 +1233,22 @@ def get_project_analytics(
         ResearchDimension.project_id == research_id
     ).all()
 
+    coverage_records = (
+        db.query(SessionDimensionCoverage)
+        .filter(
+            SessionDimensionCoverage.session_id.in_(session_ids)
+        )
+        .all()
+        if session_ids
+        else []
+    )
+
     return build_project_report(
         research_id=research_id,
         sessions=sessions,
         answers=answers,
         dimensions=dimensions,
+        coverage_records=coverage_records,
     )
 
 @app.get("/api/v1/research/{research_id}/export.csv")

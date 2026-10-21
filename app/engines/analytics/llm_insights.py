@@ -15,6 +15,12 @@ Rules:
 - State limitations when the sample is small or incomplete.
 - If the data is insufficient for a conclusion, say so.
 - Do not claim statistical significance without a suitable statistical test.
+- Use dimension_coverage to identify research dimensions with low coverage
+  or unmet targets, when this data is available.
+- Treat target_attainment as a ratio between 0 and 1.
+- Do not confuse achieved coverage with customer interest or purchase intent.
+- Treat target_gap as a coverage gap, not a market-demand gap.
+- If dimension_coverage is missing or empty, do not infer dimension-level results.
 
 Response data:
 {report}
