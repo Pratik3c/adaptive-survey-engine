@@ -1,0 +1,7 @@
+- Clone the repo
+- Create virtual envo.
+- Then install the dependencies via pip install
+- Create .env and add you llm key --> refer .env.example
+- Run the project via --> uvicorn app.main:app --reload
+- Once the project run, go to --> https://127.0.0.1:8000/docs --> to access all endpoints
+- Use these endpoints to integrate with Frontend & CCP
